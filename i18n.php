@@ -13,6 +13,7 @@ class i18n {
 
 	var $lang = null;
 
+	var $country = null;
 	
 	function __construct(){
 		$this->lang = "en";
@@ -36,7 +37,7 @@ class i18n {
 	}
 
 	/**
-	 * set a new contry code
+	 * set a new language code
 	 * @param string $_lang
 	 */
 	public function setLang($_lang){
@@ -45,10 +46,26 @@ class i18n {
 	}
 
 	/**
-	 * gets the country code
+	 * gets the language code
 	 */
 	public function getLang(){
 		return $this->lang;
+	}
+	
+	/**
+	 * sets the country code
+	 * @param string $_country
+	 */
+	public function setCountry($_country){
+		$this->country = $_country;
+		return $this;
+	}
+	
+	/**
+	 * gets the country code
+	 */
+	public function getCountry(){
+		return $this->country;
 	}
 
 	/**
@@ -56,9 +73,9 @@ class i18n {
 	 */
 	public function readLocalizationFile(){
 		$filename = sprintf("%s/%s.ini",$this->getDirectory(),$this->getLang());
-		if(file_exists($filename)){			
-			$content = parse_ini_file($filename);
-			return $content;
+		if(file_exists($filename)){
+			$process_sections = ($this->getCountry()!=null);
+			return parse_ini_file($filename,$process_sections);
 		} else {
 			die(sprintf("localization file %s does not exist!",$filename));
 		}
@@ -66,13 +83,21 @@ class i18n {
 
 	/**
 	 * returns the value of the given key
+	 * 
 	 * @param $_key
+	 * @param $_lang (optional)
+	 * @param $_country (optional)
 	 */
-	public function getTranslation($_key){
+	public function getTranslation($_key,$_lang=null, $_country=null){
+		if($_lang) $this->setLang($_lang);
+		if($_country) $this->setCountry($_country);
 		$object = $this->readLocalizationFile();
-		return $object[$_key];
+		$country = $this->getCountry();
+		if($country): return $object[$country][$_key];
+		else: return $object[$_key];
+		endif;
 	}
-
+	
 }
 
 ?>

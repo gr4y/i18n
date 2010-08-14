@@ -24,6 +24,11 @@ And the de.ini looks like this:
 
 Have fun! :-)
 
+# Changelog
+
+v0.0.1 - intial import
+v0.0.2 - support for country codes
+
 # Contribute 
 
 If you want to contribute, just fork the project, make your changes and send me a pull request.
